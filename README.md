@@ -1,0 +1,2 @@
+# PPMBotAI
+Bot automatizado para WhatsApp basado en n8n, LLaMA 3 y EvolutionAPI, con contenedores Docker. Este proyecto permite crear flujos automatizados de atención, responder preguntas frecuentes, y escalar consultas a un modelo de lenguaje avanzado (LLaMA 3) cuando no se encuentra una coincidencia directa.  Incluye un entorno listo para producción con soporte para Ngrok, lo que permite exponer servicios localmente para pruebas con dispositivos móviles.
