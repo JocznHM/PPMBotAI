@@ -1,45 +1,75 @@
-version: '3.8'
+version: "3.7"
 
 services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - evolution_network
 
+  evolution-api:
+    image: atendai/evolution-api:v2.1.1
+    container_name: evolution_api
+    restart: always
+    environment:
+      SERVER_URL: ${SERVER_URL}
+      DATABASE_ENABLED: "true"
+      DATABASE_PROVIDER: postgresql
+      DATABASE_CONNECTION_URI: ${DATABASE_CONNECTION_URI}
+      DATABASE_SAVE_DATA_INSTANCE: "true"
+      DATABASE_SAVE_DATA_NEW_MESSAGE: "true"
+      DATABASE_SAVE_MESSAGE_UPDATE: "true"
+      DATABASE_SAVE_DATA_CONTACTS: "true"
+      DATABASE_SAVE_DATA_CHATS: "true"
+      DATABASE_SAVE_DATA_LABELS: "true"
+      DATABASE_SAVE_DATA_HISTORIC: "true"
+      DATABASE_CONNECTION_CLIENT_NAME: evolution_local
+      AUTHENTICATION_API_KEY: ${AUTHENTICATION_API_KEY}
+      CACHE_REDIS_ENABLED: "false"
+      CONFIG_SESSION_PHONE_VERSION: 2.3000.1023204200
+    ports:
+      - "5600:8080"
+    volumes:
+      - evolution_instances:/evolution/instances
+    networks:
+      - evolution_network
+  
   n8n:
     image: n8nio/n8n
     container_name: n8n
+    restart: always
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD}
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
+      - DB_POSTGRESDB_USER=${POSTGRES_USER}
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
+      - GENERIC_TIMEZONE=America/Mexico_City
+      - TZ=America/Mexico_City
+      - WEBHOOK_TUNNEL_URL=http://n8n:5678
     ports:
       - "5678:5678"
     volumes:
       - n8n_data:/home/node/.n8n
-    restart: unless-stopped
-    environment:
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
-
-  evolution-api:
-    image: atendai/evolution-api
-    container_name: evolution-api
-    ports:
-      - "5600:8080"
-    environment:
-      - AUTHENTICATION_API_KEY=${EVOLUTION_API_KEY}
-    volumes:
-      - evolution_store:/evolution/store
-      - evolution_instances:/evolution/instances
-    restart: unless-stopped
-
-  ngrok:
-    image: ngrok/ngrok:latest
-    container_name: ngrok
-    environment:
-      - NGROK_AUTHTOKEN=${NGROK_TOKEN}
-    command: http evolution-api:8080
-    ports:
-      - "4040:4040"
+    networks:
+      - evolution_network
     depends_on:
-      - evolution-api
-    restart: unless-stopped
-
+      - postgres
 volumes:
-  n8n_data:
-  evolution_store:
+  postgres_data:
   evolution_instances:
+  n8n_data:
+
+networks:
+  evolution_network:
