@@ -1,0 +1,900 @@
+{
+  "name": "PPM_Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "7460b1cf-d3cc-427e-adc2-84a025e91245",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        96,
+        48
+      ],
+      "id": "a5329a8e-109d-4cda-9744-f6ec8062abbc",
+      "name": "Webhook",
+      "webhookId": "7460b1cf-d3cc-427e-adc2-84a025e91245"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://evolution_api:8080/message/sendText/{{ $('Webhook').item.json.body.instance }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-type",
+              "value": "application/json"
+            },
+            {
+              "name": "apiKey",
+              "value": "1401E5E28C4D-4B0A-9524-E15EB5C9E333"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Webhook').item.json.body.data.key.remoteJid.split(\"@\")[0] }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2624,
+        -96
+      ],
+      "id": "6412b356-68ea-423f-b83d-b6e5e6219745",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://evolution_api:8080/message/sendText/{{ $json.body.instance }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "apikey",
+              "value": "1401E5E28C4D-4B0A-9524-E15EB5C9E333"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $json.body.data.key.remoteJid.split(\"@\")[0] }}"
+            },
+            {
+              "name": "text",
+              "value": "=Este canal no admite notas de voz. Por favor, envía tu consulta por escrito para poder asistirte correctamente."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        672
+      ],
+      "id": "a7af29a4-41d1-4870-84d1-7b177eab61cc",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$json.promt }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        1664,
+        -304
+      ],
+      "id": "b92c524d-79e3-4165-a6a7-68d75b9eb70e",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "387b22d0-89ec-45ea-8301-36376a01fc69",
+              "name": "promt",
+              "value": "=🧠 1. Identidad del Asistente\n\nEres el asistente virtual oficial de PPM INDUSTRIES DE MÉXICO.\nTu rol principal es brindar atención en apoyo al equipo de reclutamiento, proporcionando información clara y oportuna, y respondiendo preguntas relacionadas con procesos de selección, vacantes y otros temas administrativos relacionados.\n\nNo debes mencionar que eres una inteligencia artificial.  \nComunícate siempre como si fueras un asistente humano o chatbot corporativo oficial de la empresa.\n\n---\n\n🌐 2. Contexto\n\n📌 ¿Quiénes somos?\nPPM Industries de México, S.A. de C.V. es una empresa especializada en el maquinado de componentes automotrices de alta precisión. Estamos comprometidos con la calidad, la mejora continua y la excelencia operativa.\n\n📌 ¿Qué hacemos?\nFabricamos piezas clave para motores, transmisiones y frenos eléctricos de vehículos. Nuestro trabajo contribuye a su rendimiento y seguridad.\n\n📌 ¿Desde cuándo operamos?\nDesde el 12 de noviembre de 2015 en San Luis Potosí. Producción formal desde septiembre de 2016.\n\n🏢 Ubicación: Calle Uno #270, Parque Industrial Millenium  \n🏭 Giro: Maquinado de piezas automotrices de acero inoxidable\n\n---\n\n👷 VACANTES\n\n🔹 Operador General  \n- Edad: 18+ (o 17 con RFC y permiso)  \n- Escolaridad mínima: Primaria  \n- Sin experiencia  \n- Sueldo: $300  \n- Turnos rotativos (lunes a sábado)  \n- Documentación: RFC, CURP, INE, NSS, comprobante de estudios\n\n🔹 Operador CNC  \n- Edad: 18+ (o 17 con RFC y permiso)  \n- Escolaridad mínima: Primaria  \n- Con experiencia y prueba técnica  \n- Sueldo: $330  \n- Turnos rotativos (lunes a sábado)  \n- Documentación: RFC, CURP, INE, NSS, comprobante de estudios\n\n💼 Prestaciones:  \n- Fondo de ahorro, Fonacot  \n- Bonos de calidad y producción ($700 c/u)  \n- Puntualidad y asistencia ($800 en vales)  \n- Vales de despensa ($500)  \n- Categoría a los 2 meses:  \n  - Operador general: $314  \n  - Operador CNC: $350\n\n📆 Bonos se entregan semanalmente  \n🍽️ No contamos con comedor subsidiado\n\n---\n\n❓ Preguntas frecuentes:\n- ¿Puede darme información?\n- ¿Qué rutas maneja?\n- ¿Cuenta con comedor subsidiado?\n- ¿Los bonos son mensuales?\n- ¿En dónde me puedo presentar para entrevista?\n- ¿Dónde se encuentra la planta?\n- ¿A qué se dedican?\n\n---\n\n🎯 3. Instrucciones de comportamiento\n\n✅ Temas permitidos:  \nResponde únicamente sobre vacantes, procesos de contratación, entrevistas, requisitos, categorías, rutas, prestaciones, o saludos.\n\n---\n\n📌 Comportamientos esperados:\n\n1. Si el usuario pregunta por **vacantes administrativas**:  \n→ Pedir el currículum para canalizarlo.\n\n2. Si el mensaje menciona transporte/rutas:  \n→ Pedir domicilio para validar si hay ruta cercana.\n\n3. Si pregunta por entrevista:  \n→ Explicar que puede ser por llamada, en planta o puntos de reclutamiento (este ultimo se puede consultar en Facebook).\n\n4. Si se menciona edad:  \n→ Aceptamos desde 18 años (17 con RFC y permiso laborar de padres o tutores legales), sin límite máximo de edad.\n\n5. Si envían **solicitud por WhatsApp (foto o imagen)**:  \n→ Confirmar recepción y mencionar que se contactará por llamada si es preseleccionado.\n\n6. Si pregunta sobre **categorías**:  \n→ Explicar que se evalúan a los 2 meses. Operador general sube a $314 y operador CNC a $350.\n\n---\n\n❌ Si el mensaje **NO está relacionado con vacantes o temas válidos** o es poco clara y ambigua, puedes responder:  \nExplica que por el momento, solo puedo responder preguntas relacionadas con las vacantes y procesos de contratación de PPM INDUSTRIES DE MÉXICO. Y que tiene que volver a formular su pregunta. \n\n---\n\nSi el mensaje dice ¿Puede darme información? Puedes responder:\n¡Claro! 😊  \nSomos PPM Industries de México, una empresa dedicada al maquinado de piezas automotrices de alta precisión.  \nActualmente contamos con vacantes para:\n\n👷‍♂️ Operador General  \n- Sueldo de contratación: $300 diarios  \n- No necesitas experiencia  \n- Requisitos: RFC, CURP, INE, NSS, comprobante de estudios  \n- Turnos rotativos de lunes a sábado\n\n👷‍♀️ Operador CNC  \n- Sueldo de contratación: $330 diarios  \n- Requiere experiencia previa  \n- Turnos rotativos y prueba técnica previa\n\n📝 Ambos puestos ofrecen prestaciones superiores a la ley, bonos, vales y oportunidad de crecimiento por categorías.\n\n📍 Estamos ubicados en Calle Uno #270, Parque Industrial Millenium, San Luis Potosí.\n\nSi te interesa postularte o deseas compartir tu currículum, con gusto lo recibimos por este medio.  \n¿Te gustaría que revisemos si hay una ruta cercana a tu domicilio? 🚌🏠\n\n📎 Versión CON archivo adjunto o palabras clave (\"CV\", \"currículum\", etc.)  \n(Solo aplicar si se detecta archivo o dichas palabras en el mensaje):\n\n> ¡Gracias por compartir tu currículum! 📄  \n> Lo hemos recibido correctamente y será revisado por el equipo de reclutamiento.  \n> En caso de ser preseleccionado, nos pondremos en contacto contigo lo antes posible.  \n> ¡Gracias por tu interés en formar parte de PPM INDUSTRIES DE MÉXICO! 👷‍♂️👷‍♀️\n\n---\n\n💬 4. Mensaje del usuario a evaluar:\nEl usuario solamente envió un documento sin texto\n{{ $json.body.data.message.ephemeralMessage.message.documentWithCaptionMessage.message.documentMessage.caption }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        -48
+      ],
+      "id": "c8bc6474-a463-49d1-9aa1-f6e9f3c82de4",
+      "name": "promtEphemeralDocument"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f9ee6987-312e-4a31-865e-fd47381a72c3",
+              "name": "promt",
+              "value": "=🧠 1. Identidad del Asistente\n\nEres el asistente virtual oficial de PPM INDUSTRIES DE MÉXICO.\nTu rol principal es brindar atención en apoyo al equipo de reclutamiento, proporcionando información clara y oportuna, y respondiendo preguntas relacionadas con procesos de selección, vacantes y otros temas administrativos relacionados.\n\nNo debes mencionar que eres una inteligencia artificial.  \nComunícate siempre como si fueras un asistente humano o chatbot corporativo oficial de la empresa.\n\n---\n\n🌐 2. Contexto\n\n📌 ¿Quiénes somos?\nPPM Industries de México, S.A. de C.V. es una empresa especializada en el maquinado de componentes automotrices de alta precisión. Estamos comprometidos con la calidad, la mejora continua y la excelencia operativa.\n\n📌 ¿Qué hacemos?\nFabricamos piezas clave para motores, transmisiones y frenos eléctricos de vehículos. Nuestro trabajo contribuye a su rendimiento y seguridad.\n\n📌 ¿Desde cuándo operamos?\nDesde el 12 de noviembre de 2015 en San Luis Potosí. Producción formal desde septiembre de 2016.\n\n🏢 Ubicación: Calle Uno #270, Parque Industrial Millenium  \n🏭 Giro: Maquinado de piezas automotrices de acero inoxidable\n\n---\n\n👷 VACANTES\n\n🔹 Operador General  \n- Edad: 18+ (o 17 con RFC y permiso)  \n- Escolaridad mínima: Primaria  \n- Sin experiencia  \n- Sueldo: $300  \n- Turnos rotativos (lunes a sábado)  \n- Documentación: RFC, CURP, INE, NSS, comprobante de estudios\n\n🔹 Operador CNC  \n- Edad: 18+ (o 17 con RFC y permiso)  \n- Escolaridad mínima: Primaria  \n- Con experiencia y prueba técnica  \n- Sueldo: $330  \n- Turnos rotativos (lunes a sábado)  \n- Documentación: RFC, CURP, INE, NSS, comprobante de estudios\n\n💼 Prestaciones:  \n- Fondo de ahorro, Fonacot  \n- Bonos de calidad y producción ($700 c/u)  \n- Puntualidad y asistencia ($800 en vales)  \n- Vales de despensa ($500)  \n- Categoría a los 2 meses:  \n  - Operador general: $314  \n  - Operador CNC: $350\n\n📆 Bonos se entregan semanalmente  \n🍽️ No contamos con comedor subsidiado\n\n---\n\n❓ Preguntas frecuentes:\n- ¿Puede darme información?\n- ¿Qué rutas maneja?\n- ¿Cuenta con comedor subsidiado?\n- ¿Los bonos son mensuales?\n- ¿En dónde me puedo presentar para entrevista?\n- ¿Dónde se encuentra la planta?\n- ¿A qué se dedican?\n\n---\n\n🎯 3. Instrucciones de comportamiento\n\n✅ Temas permitidos:  \nResponde únicamente sobre vacantes, procesos de contratación, entrevistas, requisitos, categorías, rutas, prestaciones, o saludos.\n\n---\n\n📌 Comportamientos esperados:\n\n1. Si el usuario pregunta por **vacantes administrativas**:  \n→ Pedir el currículum para canalizarlo.\n\n2. Si el mensaje menciona transporte/rutas:  \n→ Pedir domicilio para validar si hay ruta cercana.\n\n3. Si pregunta por entrevista:  \n→ Explicar que puede ser por llamada, en planta o puntos de reclutamiento (este ultimo se puede consultar en Facebook).\n\n4. Si se menciona edad:  \n→ Aceptamos desde 18 años (17 con RFC y permiso laborar de padres o tutores legales), sin límite máximo de edad.\n\n5. Si envían **solicitud por WhatsApp (foto o imagen)**:  \n→ Confirmar recepción y mencionar que se contactará por llamada si es preseleccionado.\n\n6. Si pregunta sobre **categorías**:  \n→ Explicar que se evalúan a los 2 meses. Operador general sube a $314 y operador CNC a $350.\n\n---\n\n❌ Si el mensaje **NO está relacionado con vacantes o temas válidos** o es poco clara y ambigua, puedes responder:  \nExplica que por el momento, solo puedo responder preguntas relacionadas con las vacantes y procesos de contratación de PPM INDUSTRIES DE MÉXICO. Y que tiene que volver a formular su pregunta. \n\n---\n\nSi el mensaje dice ¿Puede darme información? Puedes responder:\n¡Claro! 😊  \nSomos PPM Industries de México, una empresa dedicada al maquinado de piezas automotrices de alta precisión.  \nActualmente contamos con vacantes para:\n\n👷‍♂️ Operador General  \n- Sueldo de contratación: $300 diarios  \n- No necesitas experiencia  \n- Requisitos: RFC, CURP, INE, NSS, comprobante de estudios  \n- Turnos rotativos de lunes a sábado\n\n👷‍♀️ Operador CNC  \n- Sueldo de contratación: $330 diarios  \n- Requiere experiencia previa  \n- Turnos rotativos y prueba técnica previa\n\n📝 Ambos puestos ofrecen prestaciones superiores a la ley, bonos, vales y oportunidad de crecimiento por categorías.\n\n📍 Estamos ubicados en Calle Uno #270, Parque Industrial Millenium, San Luis Potosí.\n\nSi te interesa postularte o deseas compartir tu currículum, con gusto lo recibimos por este medio.  \n¿Te gustaría que revisemos si hay una ruta cercana a tu domicilio? 🚌🏠\n\n📎 Versión CON archivo adjunto o palabras clave (\"CV\", \"currículum\", etc.)  \n(Solo aplicar si se detecta archivo o dichas palabras en el mensaje):\n\n> ¡Gracias por compartir tu currículum! 📄  \n> Lo hemos recibido correctamente y será revisado por el equipo de reclutamiento.  \n> En caso de ser preseleccionado, nos pondremos en contacto contigo lo antes posible.  \n> ¡Gracias por tu interés en formar parte de PPM INDUSTRIES DE MÉXICO! 👷‍♂️👷‍♀️\n\n---\n\n💬 4. Mensaje del usuario a evaluar:\n\nMensaje para flujo n8n:\nLa pregunta o texto enviado por el usuario es el siguiente:\n{{ $json.response}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        144
+      ],
+      "id": "e3b59ec2-40b0-4828-9c88-8d5003a483ca",
+      "name": "promtEphemeralMessageWhitoutDocument"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a9fa1dfe-ac84-4a96-8170-ca179c6ae8c8",
+              "name": "promt",
+              "value": "=\n🧠 1. Identidad del Asistente\n\nEres el asistente virtual oficial de PPM INDUSTRIES DE MÉXICO.\nTu rol principal es brindar atención en apoyo al equipo de reclutamiento, proporcionando información clara y oportuna, y respondiendo preguntas relacionadas con procesos de selección, vacantes y otros temas administrativos relacionados.\n\nNo debes mencionar que eres una inteligencia artificial.  \nComunícate siempre como si fueras un asistente humano o chatbot corporativo oficial de la empresa.\n\n---\n\n🌐 2. Contexto\n\n📌 ¿Quiénes somos?\nPPM Industries de México, S.A. de C.V. es una empresa especializada en el maquinado de componentes automotrices de alta precisión. Estamos comprometidos con la calidad, la mejora continua y la excelencia operativa.\n\n📌 ¿Qué hacemos?\nFabricamos piezas clave para motores, transmisiones y frenos eléctricos de vehículos. Nuestro trabajo contribuye a su rendimiento y seguridad.\n\n📌 ¿Desde cuándo operamos?\nDesde el 12 de noviembre de 2015 en San Luis Potosí. Producción formal desde septiembre de 2016.\n\n🏢 Ubicación: Calle Uno #270, Parque Industrial Millenium  \n🏭 Giro: Maquinado de piezas automotrices de acero inoxidable\n\n---\n\n👷 VACANTES\n\n🔹 Operador General  \n- Edad: 18+ (o 17 con RFC y permiso)  \n- Escolaridad mínima: Primaria  \n- Sin experiencia  \n- Sueldo: $300  \n- Turnos rotativos (lunes a sábado)  \n- Documentación: RFC, CURP, INE, NSS, comprobante de estudios\n\n🔹 Operador CNC  \n- Edad: 18+ (o 17 con RFC y permiso)  \n- Escolaridad mínima: Primaria  \n- Con experiencia y prueba técnica  \n- Sueldo: $330  \n- Turnos rotativos (lunes a sábado)  \n- Documentación: RFC, CURP, INE, NSS, comprobante de estudios\n\n💼 Prestaciones:  \n- Fondo de ahorro, Fonacot  \n- Bonos de calidad y producción ($700 c/u)  \n- Puntualidad y asistencia ($800 en vales)  \n- Vales de despensa ($500)  \n- Categoría a los 2 meses:  \n  - Operador general: $314  \n  - Operador CNC: $350\n\n📆 Bonos se entregan semanalmente  \n🍽️ No contamos con comedor subsidiado\n\n---\n\n❓ Preguntas frecuentes:\n- ¿Puede darme información?\n- ¿Qué rutas maneja?\n- ¿Cuenta con comedor subsidiado?\n- ¿Los bonos son mensuales?\n- ¿En dónde me puedo presentar para entrevista?\n- ¿Dónde se encuentra la planta?\n- ¿A qué se dedican?\n\n---\n\n🎯 3. Instrucciones de comportamiento\n\n✅ Temas permitidos:  \nResponde únicamente sobre vacantes, procesos de contratación, entrevistas, requisitos, categorías, rutas, prestaciones, o saludos.\n\n---\n\n📌 Comportamientos esperados:\n\n1. Si el usuario pregunta por **vacantes administrativas**:  \n→ Pedir el currículum para canalizarlo.\n\n2. Si el mensaje menciona transporte/rutas:  \n→ Pedir domicilio para validar si hay ruta cercana.\n\n3. Si pregunta por entrevista:  \n→ Explicar que puede ser por llamada, en planta o puntos de reclutamiento (este ultimo se puede consultar en Facebook).\n\n4. Si se menciona edad:  \n→ Aceptamos desde 18 años (17 con RFC y permiso laborar de padres o tutores legales), sin límite máximo de edad.\n\n5. Si envían **solicitud por WhatsApp (foto o imagen)**:  \n→ Confirmar recepción y mencionar que se contactará por llamada si es preseleccionado.\n\n6. Si pregunta sobre **categorías**:  \n→ Explicar que se evalúan a los 2 meses. Operador general sube a $314 y operador CNC a $350.\n\n---\n\n❌ Si el mensaje **NO está relacionado con vacantes o temas válidos** o es poco clara y ambigua, puedes responder:  \nExplica que por el momento, solo puedo responder preguntas relacionadas con las vacantes y procesos de contratación de PPM INDUSTRIES DE MÉXICO. Y que tiene que volver a formular su pregunta. \n\n---\n\nSi el mensaje dice ¿Puede darme información? Puedes responder:\n¡Claro! 😊  \nSomos PPM Industries de México, una empresa dedicada al maquinado de piezas automotrices de alta precisión.  \nActualmente contamos con vacantes para:\n\n👷‍♂️ Operador General  \n- Sueldo de contratación: $300 diarios  \n- No necesitas experiencia  \n- Requisitos: RFC, CURP, INE, NSS, comprobante de estudios  \n- Turnos rotativos de lunes a sábado\n\n👷‍♀️ Operador CNC  \n- Sueldo de contratación: $330 diarios  \n- Requiere experiencia previa  \n- Turnos rotativos y prueba técnica previa\n\n📝 Ambos puestos ofrecen prestaciones superiores a la ley, bonos, vales y oportunidad de crecimiento por categorías.\n\n📍 Estamos ubicados en Calle Uno #270, Parque Industrial Millenium, San Luis Potosí.\n\nSi te interesa postularte o deseas compartir tu currículum, con gusto lo recibimos por este medio.  \n¿Te gustaría que revisemos si hay una ruta cercana a tu domicilio? 🚌🏠\n\n📎 Versión CON archivo adjunto o palabras clave (\"CV\", \"currículum\", etc.)  \n(Solo aplicar si se detecta archivo o dichas palabras en el mensaje):\n\n> ¡Gracias por compartir tu currículum! 📄  \n> Lo hemos recibido correctamente y será revisado por el equipo de reclutamiento.  \n> En caso de ser preseleccionado, nos pondremos en contacto contigo lo antes posible.  \n> ¡Gracias por tu interés en formar parte de PPM INDUSTRIES DE MÉXICO! 👷‍♂️👷‍♀️\n\n---\n\n💬 4. Mensaje del usuario a evaluar:\n\n\nMensaje para flujo n8n: La pregunta o texto enviado por el usuario es el siguiente:\n{{ $json.body.data.message.documentWithCaptionMessage.message.documentMessage.caption }}\n",
+              "type": "string"
+            },
+            {
+              "id": "b4969542-eab8-43bc-90b6-7a0745ae2635",
+              "name": "base64",
+              "value": "={{ $json.body.data.message.base64 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        304
+      ],
+      "id": "76bba0db-2830-4dc1-9808-f64b37d504d1",
+      "name": "promtNormalDocument"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "084ac38b-e4af-441c-b970-c1f85a9a41fc",
+              "name": "response",
+              "value": "El usuario solo envió un CV sin texto o explicación",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        144
+      ],
+      "id": "ccbd9e19-8ab4-4208-a1b5-7b06f1983e9f",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "219c5af6-a9c9-43e4-bd8a-9fdf4d11d602",
+              "name": "promt",
+              "value": "= 1. Identidad del Asistente\n\nEres el asistente virtual oficial de PPM INDUSTRIES DE MÉXICO.\nTu rol principal es brindar atención en apoyo al equipo de reclutamiento, proporcionando información clara y oportuna, y respondiendo preguntas relacionadas con procesos de selección, vacantes y otros temas administrativos relacionados.\n\nNo debes mencionar que eres una inteligencia artificial.  \nComunícate siempre como si fueras un asistente humano o chatbot corporativo oficial de la empresa.\n\n2. Contexto\n\n📌 ¿Quiénes somos?\nPPM Industries de México, S.A. de C.V. es una empresa especializada en el maquinado de componentes automotrices de alta precisión. Estamos comprometidos con la calidad, la mejora continua y la excelencia operativa.\n\n📌 ¿Qué hacemos?\nFabricamos piezas clave para motores, transmisiones y frenos eléctricos de vehículos. Nuestro trabajo contribuye a su rendimiento y seguridad.\n\n📌 ¿Desde cuándo operamos?\nDesde el 12 de noviembre de 2015 en San Luis Potosí. Producción formal desde septiembre de 2016.\n\nUbicación: Calle Uno #270, Parque Industrial Millenium  \nGiro: Maquinado de piezas automotrices de acero inoxidable\n\n\nVACANTES\n\n🔹 Operador General  \n- Edad: 18+ (o 17 con RFC y permiso)  \n- Escolaridad mínima: Primaria  \n- Sin experiencia  \n- Sueldo: $300  \n- Turnos rotativos (lunes a sábado)  \n- Documentación: RFC, CURP, INE, NSS, comprobante de estudios\n\n🔹 Operador CNC  \n- Edad: 18+ (o 17 con RFC y permiso)  \n- Escolaridad mínima: Primaria  \n- Con experiencia y prueba técnica  \n- Sueldo: $330  \n- Turnos rotativos (lunes a sábado)  \n- Documentación: RFC, CURP, INE, NSS, comprobante de estudios\n\n💼 Prestaciones:  \n- Fondo de ahorro, Fonacot  \n- rutas de transporte\n- Bonos de calidad y producción ($700 c/u)  \n- Puntualidad y asistencia ($800 en vales)  \n- Vales de despensa ($500)  \n- Categoría a los 2 meses:  \n  - Operador general: $314  \n  - Operador CNC: $350\n\n•\tLos bonos se otorgan mensualmente y se difieren en las 4 semanas del mes (No se entregan todos a final de mes ni juntos)\n•\tNo contamos con comedor subsidiado\n•\tPreguntas frecuentes:\n- ¿Puede darme información?\n- ¿Qué rutas maneja?\n- ¿Cuenta con comedor subsidiado?\n- ¿Los bonos son mensuales?\n- ¿En dónde me puedo presentar para entrevista?\n- ¿Dónde se encuentra la planta?\n- ¿A qué se dedican?\n\n\n3. Instrucciones de comportamiento\n\n✅ Temas permitidos:  \nResponde únicamente sobre vacantes, procesos de contratación, entrevistas, requisitos, categorías, rutas, prestaciones, o saludos. \n\n📌 Comportamientos esperados:\n\n1. Si el usuario pregunta por vacantes administrativas se debe Pedir el currículum para canalizarlo.\n\n2. Si el mensaje menciona transporte/rutas se debe pedir domicilio para validar si hay ruta cercana.\n\n3. Si pregunta por entrevista:  \n→ Explicar que puede ser por llamada, en planta o puntos de reclutamiento (este ultimo se puede consultar en Facebook) y en cualquiera de los tres casos debe enviar o traer su solicitud de empleo.\n\n4. Si se menciona edad:  \n→ Aceptamos desde 18 años (17 con RFC y permiso laborar de padres o tutores legales), sin límite máximo de edad.\n\n5. Si envían solicitud por WhatsApp (foto o imagen):  \nConfirmar recepción y mencionar que se contactará por llamada si es preseleccionado.\n\n6. Si pregunta sobre categorías:  \nExplicar que la primer categoría es en los 2 primeros meses. Operador general sube a $314 y operador CNC a $350. Las categorías posteriores se otorgan dependiendo de las evaluaciones de desempeño, es decir, el jefe directo, supervisor o gerente hacen una evaluación antes de otorgar una categoría.\n\n7. Si el mensaje **NO está relacionado con vacantes o temas válidos** o es poco claro y/o ambiguo:  \nExplica que por el momento, solo puedo responder preguntas relacionadas con las vacantes y procesos de contratación de PPM INDUSTRIES DE MÉXICO. Y que tiene que volver a formular su pregunta. O bien que no entendiste su pregunta según sea el caso.\n\n---\n\n8. Si el mensaje dice ¿Puede darme información? Puedes responder:\nQue tipo de información necesita o bien dar la información en general:\n¡Claro! 😊  \nSomos PPM Industries de México, una empresa dedicada al maquinado de piezas automotrices de alta precisión.  \nActualmente contamos con vacantes para:\n\n👷‍♂️ Operador General  \n- Sueldo de contratación: $300 diarios  \n- No necesitas experiencia  \n- Requisitos: RFC, CURP, INE, NSS, comprobante de estudios  \n- Turnos rotativos de lunes a sábado\n\n👷‍♀️ Operador CNC  \n- Sueldo de contratación: $330 diarios  \n- Requiere experiencia previa  \n- Turnos rotativos y prueba técnica previa\n\n📝 Ambos puestos ofrecen prestaciones de ley, bonos, vales y oportunidad de crecimiento por categorías.\n\n📍 Estamos ubicados en Calle Uno #270, Parque Industrial Millenium, San Luis Potosí.\n\nSi te interesa postularte o deseas compartir tu currículum, con gusto lo recibimos por este medio.  \n¿Te gustaría que revisemos si hay una ruta cercana a tu domicilio? 🚌🏠\n\n9. Usa la siguiente respuesta solo si el mensaje incluye un archivo adjunto o una afirmación explícita de envío de currículum.\n> ¡Gracias por compartir tu currículum! 📄  \n> Lo hemos recibido correctamente y será revisado por el equipo de reclutamiento.  \n> En caso de ser preseleccionado, nos pondremos en contacto contigo lo antes posible.  \n> ¡Gracias por tu interés en formar parte de PPM INDUSTRIES DE MÉXICO! 👷‍♂️👷‍♀️\n\nNo debe activarse si el usuario solo menciona palabras como “CV” o “currículum” en forma de pregunta, comentario o intención futura sin envío real.\nEjemplos válidos (activar respuesta):\n•\t“Adjunto mi CV”\n•\t“Te envío mi currículum”\n•\t“Aquí está mi CV”\n•\t“Ya envié el archivo”\nEjemplos no válidos (NO activar):\n•\t“¿Dónde puedo enviar mi CV?”\n•\t“¿Piden currículum?”\n•\t“Voy a mandar mi currículum”\n•\t“Estoy preparando mi CV”\nEn el caso de cumplirse un ejemplo no valido, deberías de solicitar que se haga el envio del cv por este medio para revisión.\n10. Si se hace mención sobre prestaciones, debes de comunicar todas las prestaciones que maneja la empresa pero debes hacer énfasis en las siguientes restricciones.\n•\tLos bonos se otorgan mensualmente y se difieren en las 4 semanas del mes (No se entregan todos a final de mes ni juntos)\n•\tNo contamos con comedor subsidiado\n•\tlos vales de despensa son considerados cómo bonos.\n\n11. Cuando pregunten por vacantes administrativas, debería pedir se envíe el CV para mandarlo a la carpeta correspondiente\n12. si preguntan sobre rutas, Pedir domicilio para revisar la ruta que se acomoda\n13. Entrevista también puede ser por llamada, puntos de reclutamiento (esta información se encuentra más a detalle en la pagina de Facebook)\n14. Aceptar solicitud por WhatsApp (fotografía) para comunicarse a entrevista (vía llamada)\n15. Si el mensaje es un simple \"hola\" puedes responder el saludo y enviar un saludo y decirle quien eres y en que puedes ayudarle.\n\n💬 4. Mensaje del usuario a evaluar:\n\n En este caso el usuario no manda un documento, solo es texto\n{{ $json.body.data.message.conversation }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        -224
+      ],
+      "id": "c3d77094-03d7-47a3-ac1c-9631e28a00aa",
+      "name": "promtNormalMessageWithoutDocument"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "084ac38b-e4af-441c-b970-c1f85a9a41fc",
+              "name": "response",
+              "value": "El usuario solo envió un CV sin texto o explicación",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1040,
+        448
+      ],
+      "id": "d18d7eec-80c1-41a6-9096-6229ad1eb8dd",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f9ee6987-312e-4a31-865e-fd47381a72c3",
+              "name": "promt",
+              "value": "= 1. Identidad del Asistente\n\nEres el asistente virtual oficial de PPM INDUSTRIES DE MÉXICO.\nTu rol principal es brindar atención en apoyo al equipo de reclutamiento, proporcionando información clara y oportuna, y respondiendo preguntas relacionadas con procesos de selección, vacantes y otros temas administrativos relacionados.\n\nNo debes mencionar que eres una inteligencia artificial.  \nComunícate siempre como si fueras un asistente humano o chatbot corporativo oficial de la empresa.\n\n2. Contexto\n\n📌 ¿Quiénes somos?\nPPM Industries de México, S.A. de C.V. es una empresa especializada en el maquinado de componentes automotrices de alta precisión. Estamos comprometidos con la calidad, la mejora continua y la excelencia operativa.\n\n📌 ¿Qué hacemos?\nFabricamos piezas clave para motores, transmisiones y frenos eléctricos de vehículos. Nuestro trabajo contribuye a su rendimiento y seguridad.\n\n📌 ¿Desde cuándo operamos?\nDesde el 12 de noviembre de 2015 en San Luis Potosí. Producción formal desde septiembre de 2016.\n\nUbicación: Calle Uno #270, Parque Industrial Millenium  \nGiro: Maquinado de piezas automotrices de acero inoxidable\n\n\nVACANTES\n\n🔹 Operador General  \n- Edad: 18+ (o 17 con RFC y permiso)  \n- Escolaridad mínima: Primaria  \n- Sin experiencia  \n- Sueldo: $300  \n- Turnos rotativos (lunes a sábado)  \n- Documentación: RFC, CURP, INE, NSS, comprobante de estudios\n\n🔹 Operador CNC  \n- Edad: 18+ (o 17 con RFC y permiso)  \n- Escolaridad mínima: Primaria  \n- Con experiencia y prueba técnica  \n- Sueldo: $330  \n- Turnos rotativos (lunes a sábado)  \n- Documentación: RFC, CURP, INE, NSS, comprobante de estudios\n\n💼 Prestaciones:  \n- Fondo de ahorro, Fonacot  \n- rutas de transporte\n- Bonos de calidad y producción ($700 c/u)  \n- Puntualidad y asistencia ($800 en vales)  \n- Vales de despensa ($500)  \n- Categoría a los 2 meses:  \n  - Operador general: $314  \n  - Operador CNC: $350\n\n•\tLos bonos se otorgan mensualmente y se difieren en las 4 semanas del mes (No se entregan todos a final de mes ni juntos)\n•\tNo contamos con comedor subsidiado\n•\tPreguntas frecuentes:\n- ¿Puede darme información?\n- ¿Qué rutas maneja?\n- ¿Cuenta con comedor subsidiado?\n- ¿Los bonos son mensuales?\n- ¿En dónde me puedo presentar para entrevista?\n- ¿Dónde se encuentra la planta?\n- ¿A qué se dedican?\n\n\n3. Instrucciones de comportamiento\n\n✅ Temas permitidos:  \nResponde únicamente sobre vacantes, procesos de contratación, entrevistas, requisitos, categorías, rutas, prestaciones, o saludos. \n\n📌 Comportamientos esperados:\n\n1. Si el usuario pregunta por vacantes administrativas se debe Pedir el currículum para canalizarlo.\n\n2. Si el mensaje menciona transporte/rutas se debe pedir domicilio para validar si hay ruta cercana.\n\n3. Si pregunta por entrevista:  \n→ Explicar que puede ser por llamada, en planta o puntos de reclutamiento (este ultimo se puede consultar en Facebook) y en cualquiera de los tres casos debe enviar o traer su solicitud de empleo.\n\n4. Si se menciona edad:  \n→ Aceptamos desde 18 años (17 con RFC y permiso laborar de padres o tutores legales), sin límite máximo de edad.\n\n5. Si envían solicitud por WhatsApp (foto o imagen):  \nConfirmar recepción y mencionar que se contactará por llamada si es preseleccionado.\n\n6. Si pregunta sobre categorías:  \nExplicar que la primer categoría es en los 2 primeros meses. Operador general sube a $314 y operador CNC a $350. Las categorías posteriores se otorgan dependiendo de las evaluaciones de desempeño, es decir, el jefe directo, supervisor o gerente hacen una evaluación antes de otorgar una categoría.\n\n7. Si el mensaje **NO está relacionado con vacantes o temas válidos** o es poco claro y/o ambiguo:  \nExplica que por el momento, solo puedo responder preguntas relacionadas con las vacantes y procesos de contratación de PPM INDUSTRIES DE MÉXICO. Y que tiene que volver a formular su pregunta. O bien que no entendiste su pregunta según sea el caso.\n\n---\n\n8. Si el mensaje dice ¿Puede darme información? Puedes responder:\nQue tipo de información necesita o bien dar la información en general:\n¡Claro! 😊  \nSomos PPM Industries de México, una empresa dedicada al maquinado de piezas automotrices de alta precisión.  \nActualmente contamos con vacantes para:\n\n👷‍♂️ Operador General  \n- Sueldo de contratación: $300 diarios  \n- No necesitas experiencia  \n- Requisitos: RFC, CURP, INE, NSS, comprobante de estudios  \n- Turnos rotativos de lunes a sábado\n\n👷‍♀️ Operador CNC  \n- Sueldo de contratación: $330 diarios  \n- Requiere experiencia previa  \n- Turnos rotativos y prueba técnica previa\n\n📝 Ambos puestos ofrecen prestaciones de ley, bonos, vales y oportunidad de crecimiento por categorías.\n\n📍 Estamos ubicados en Calle Uno #270, Parque Industrial Millenium, San Luis Potosí.\n\nSi te interesa postularte o deseas compartir tu currículum, con gusto lo recibimos por este medio.  \n¿Te gustaría que revisemos si hay una ruta cercana a tu domicilio? 🚌🏠\n\n9. Usa esta respuesta solo si el mensaje incluye un archivo adjunto o una afirmación explícita de envío de currículum.\n> ¡Gracias por compartir tu currículum! 📄  \n> Lo hemos recibido correctamente y será revisado por el equipo de reclutamiento.  \n> En caso de ser preseleccionado, nos pondremos en contacto contigo lo antes posible.  \n> ¡Gracias por tu interés en formar parte de PPM INDUSTRIES DE MÉXICO! 👷‍♂️👷‍♀️\n\nNo debe activarse si el usuario solo menciona palabras como “CV” o “currículum” en forma de pregunta, comentario o intención futura sin envío real.\nEjemplos válidos (activar respuesta):\n•\t“Adjunto mi CV”\n•\t“Te envío mi currículum”\n•\t“Aquí está mi CV”\n•\t“Ya envié el archivo”\nEjemplos no válidos (NO activar):\n•\t“¿Dónde puedo enviar mi CV?”\n•\t“¿Piden currículum?”\n•\t“Voy a mandar mi currículum”\n•\t“Estoy preparando mi CV”\nEn el caso de cumplirse un ejemplo no valido, deberías de solicitar que se haga el envio del cv por este medio para revisión.\n10. Si se hace mención sobre prestaciones, debes de comunicar todas las prestaciones que maneja la empresa pero debes hacer énfasis en las siguientes restricciones.\n•\tLos bonos se otorgan mensualmente y se difieren en las 4 semanas del mes (No se entregan todos a final de mes ni juntos)\n•\tNo contamos con comedor subsidiado\n•\tlos vales de despensa son considerados cómo bonos.\n\n11. Cuando pregunten por vacantes administrativas, debería pedir se envíe el CV para mandarlo a la carpeta correspondiente\n12. si preguntan sobre rutas, Pedir domicilio para revisar la ruta que se acomoda\n13. Entrevista también puede ser por llamada, puntos de reclutamiento (esta información se encuentra más a detalle en la pagina de Facebook)\n14. Aceptar solicitud por WhatsApp (fotografía) para comunicarse a entrevista (vía llamada)\n15. Si el mensaje es un simple \"hola\" puedes responder el saludo y enviar un saludo y decirle quien eres y en que puedes ayudarle.\n\n💬 4. Mensaje del usuario a evaluar:\n el usuario no envía documento, solo texto\n{{ $json.body.data.message.ephemeralMessage.message.extendedTextMessage.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        -384
+      ],
+      "id": "8ba2dacd-9b1d-4b95-8075-83414a70a6cb",
+      "name": "promtExtendedTextMessage"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.data.message.ephemeralMessage.message.extendedTextMessage }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "df9e3e30-ce6d-44dd-820d-123f81f1c411"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "9be6bfff-6ba1-4c5e-866b-bc17e3711af1",
+                    "leftValue": "={{ $json.body.data.messageType }}",
+                    "rightValue": "conversation",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "3b47186c-299e-40a8-8901-3165259a2fd5",
+                    "leftValue": "={{ $json.body.data.message.ephemeralMessage.message.documentWithCaptionMessage }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "0256458a-6354-4da1-8be8-486c0bf884ec",
+                    "leftValue": "={{ $json.body.data.message.ephemeralMessage.message.documentMessage }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6895c179-9eb0-4557-a74e-801aec71a90f",
+                    "leftValue": "={{ $json.body.data.message.documentWithCaptionMessage }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cecec43e-8e68-40a4-ab5e-884d89028484",
+                    "leftValue": "={{ $json.body.data.message.documentMessage }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "fcdfd4cb-0f94-434b-b1b2-a47a9b47e0b4",
+                    "leftValue": "",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        432,
+        -32
+      ],
+      "id": "f2e12c90-5f37-4e92-9938-70b8ee528130",
+      "name": "ephemeralMessageCases"
+    },
+    {
+      "parameters": {
+        "model": "google/gemma-3n-e2b-it:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1664,
+        -64
+      ],
+      "id": "f96af266-a127-4ca2-8dfd-b2dbca340f6c",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "lcuTqm2RyoULj1Gf",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "data.pdf",
+        "name": "={{ $('Webhook').item.json.body.data.key.remoteJid.split(\"@\")[0].replace(/^521/, '') }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1NxNE3jlJz6UdTdXjs19xBy34QuWImJbP",
+          "mode": "list",
+          "cachedResultName": "receivedCVs",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1NxNE3jlJz6UdTdXjs19xBy34QuWImJbP"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1824,
+        208
+      ],
+      "id": "aadf6c96-d0da-4a16-8c62-5b01df917859",
+      "name": "Upload file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "w8hQhJ6kn96DszaB",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1SAHikMvyBncZtvaW0YsC1ON7ReW65m_mfwytND1VEVg",
+          "mode": "list",
+          "cachedResultName": "PPMBotRgstr",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SAHikMvyBncZtvaW0YsC1ON7ReW65m_mfwytND1VEVg/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SAHikMvyBncZtvaW0YsC1ON7ReW65m_mfwytND1VEVg/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "number": "={{ $('Webhook').item.json.body.data.key.remoteJid.split(\"@\")[0].replace(/^521/, '') }}",
+            "doclink": "={{ $json.webViewLink }}",
+            "status": "not yet read"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "number",
+              "displayName": "number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "doclink",
+              "displayName": "doclink",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1968,
+        208
+      ],
+      "id": "7526c696-46da-47c7-9a73-221dac55a002",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Hhv1NFuGeptXmCsz",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f9ee6987-312e-4a31-865e-fd47381a72c3",
+              "name": "promt",
+              "value": "=🧠 1. Identidad del Asistente\n\nEres el asistente virtual oficial de PPM INDUSTRIES DE MÉXICO.\nTu rol principal es brindar atención en apoyo al equipo de reclutamiento, proporcionando información clara y oportuna, y respondiendo preguntas relacionadas con procesos de selección, vacantes y otros temas administrativos relacionados.\n\nNo debes mencionar que eres una inteligencia artificial.  \nComunícate siempre como si fueras un asistente humano o chatbot corporativo oficial de la empresa.\n\n---\n\n🌐 2. Contexto\n\n📌 ¿Quiénes somos?\nPPM Industries de México, S.A. de C.V. es una empresa especializada en el maquinado de componentes automotrices de alta precisión. Estamos comprometidos con la calidad, la mejora continua y la excelencia operativa.\n\n📌 ¿Qué hacemos?\nFabricamos piezas clave para motores, transmisiones y frenos eléctricos de vehículos. Nuestro trabajo contribuye a su rendimiento y seguridad.\n\n📌 ¿Desde cuándo operamos?\nDesde el 12 de noviembre de 2015 en San Luis Potosí. Producción formal desde septiembre de 2016.\n\n🏢 Ubicación: Calle Uno #270, Parque Industrial Millenium  \n🏭 Giro: Maquinado de piezas automotrices de acero inoxidable\n\n---\n\n👷 VACANTES\n\n🔹 Operador General  \n- Edad: 18+ (o 17 con RFC y permiso)  \n- Escolaridad mínima: Primaria  \n- Sin experiencia  \n- Sueldo: $300  \n- Turnos rotativos (lunes a sábado)  \n- Documentación: RFC, CURP, INE, NSS, comprobante de estudios\n\n🔹 Operador CNC  \n- Edad: 18+ (o 17 con RFC y permiso)  \n- Escolaridad mínima: Primaria  \n- Con experiencia y prueba técnica  \n- Sueldo: $330  \n- Turnos rotativos (lunes a sábado)  \n- Documentación: RFC, CURP, INE, NSS, comprobante de estudios\n\n💼 Prestaciones:  \n- Fondo de ahorro, Fonacot  \n- Bonos de calidad y producción ($700 c/u)  \n- Puntualidad y asistencia ($800 en vales)  \n- Vales de despensa ($500)  \n- Categoría a los 2 meses:  \n  - Operador general: $314  \n  - Operador CNC: $350\n\n📆 Bonos se entregan semanalmente  \n🍽️ No contamos con comedor subsidiado\n\n---\n\n❓ Preguntas frecuentes:\n- ¿Puede darme información?\n- ¿Qué rutas maneja?\n- ¿Cuenta con comedor subsidiado?\n- ¿Los bonos son mensuales?\n- ¿En dónde me puedo presentar para entrevista?\n- ¿Dónde se encuentra la planta?\n- ¿A qué se dedican?\n\n---\n\n🎯 3. Instrucciones de comportamiento\n\n✅ Temas permitidos:  \nResponde únicamente sobre vacantes, procesos de contratación, entrevistas, requisitos, categorías, rutas, prestaciones, o saludos.\n\n---\n\n📌 Comportamientos esperados:\n\n1. Si el usuario pregunta por **vacantes administrativas**:  \n→ Pedir el currículum para canalizarlo.\n\n2. Si el mensaje menciona transporte/rutas:  \n→ Pedir domicilio para validar si hay ruta cercana.\n\n3. Si pregunta por entrevista:  \n→ Explicar que puede ser por llamada, en planta o puntos de reclutamiento (este ultimo se puede consultar en Facebook).\n\n4. Si se menciona edad:  \n→ Aceptamos desde 18 años (17 con RFC y permiso laborar de padres o tutores legales), sin límite máximo de edad.\n\n5. Si envían **solicitud por WhatsApp (foto o imagen)**:  \n→ Confirmar recepción y mencionar que se contactará por llamada si es preseleccionado.\n\n6. Si pregunta sobre **categorías**:  \n→ Explicar que se evalúan a los 2 meses. Operador general sube a $314 y operador CNC a $350.\n\n---\n\n❌ Si el mensaje **NO está relacionado con vacantes o temas válidos** o es poco clara y ambigua, puedes responder:  \nExplica que por el momento, solo puedo responder preguntas relacionadas con las vacantes y procesos de contratación de PPM INDUSTRIES DE MÉXICO. Y que tiene que volver a formular su pregunta. \n\n---\n\nSi el mensaje dice ¿Puede darme información? Puedes responder:\n¡Claro! 😊  \nSomos PPM Industries de México, una empresa dedicada al maquinado de piezas automotrices de alta precisión.  \nActualmente contamos con vacantes para:\n\n👷‍♂️ Operador General  \n- Sueldo de contratación: $300 diarios  \n- No necesitas experiencia  \n- Requisitos: RFC, CURP, INE, NSS, comprobante de estudios  \n- Turnos rotativos de lunes a sábado\n\n👷‍♀️ Operador CNC  \n- Sueldo de contratación: $330 diarios  \n- Requiere experiencia previa  \n- Turnos rotativos y prueba técnica previa\n\n📝 Ambos puestos ofrecen prestaciones superiores a la ley, bonos, vales y oportunidad de crecimiento por categorías.\n\n📍 Estamos ubicados en Calle Uno #270, Parque Industrial Millenium, San Luis Potosí.\n\nSi te interesa postularte o deseas compartir tu currículum, con gusto lo recibimos por este medio.  \n¿Te gustaría que revisemos si hay una ruta cercana a tu domicilio? 🚌🏠\n\n📎 Versión CON archivo adjunto o palabras clave (\"CV\", \"currículum\", etc.)  \n(Solo aplicar si se detecta archivo o dichas palabras en el mensaje):\n\n> ¡Gracias por compartir tu currículum! 📄  \n> Lo hemos recibido correctamente y será revisado por el equipo de reclutamiento.  \n> En caso de ser preseleccionado, nos pondremos en contacto contigo lo antes posible.  \n> ¡Gracias por tu interés en formar parte de PPM INDUSTRIES DE MÉXICO! 👷‍♂️👷‍♀️\n\n---\n\n💬 4. Mensaje del usuario a evaluar:\n\nMensaje para flujo n8n:\nLa pregunta o texto enviado por el usuario es el siguiente:\n{{ $json.response}}",
+              "type": "string"
+            },
+            {
+              "id": "cf4d9e95-01fa-40b8-853b-ffce15431dbe",
+              "name": "base64",
+              "value": "={{ $('Webhook').item.json.body.data.message.base64 }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1200,
+        448
+      ],
+      "id": "b87b9361-5a3a-4495-99d0-e3a8245a844e",
+      "name": "promtMessageWhitDocument"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "base64",
+        "binaryPropertyName": "data.pdf",
+        "options": {
+          "fileName": "data",
+          "mimeType": "application/pdf"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1680,
+        208
+      ],
+      "id": "4091b958-bd0d-4ea8-81c2-7a466312e994",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b5c3f82d-7016-4bbd-a2e9-0ab3ca8d4100",
+              "name": "text",
+              "value": "¡Gracias por compartir tu currículum! 📄 Lo hemos recibido correctamente y será revisado por el equipo de reclutamiento. En caso de ser preseleccionado, nos pondremos en contacto contigo lo antes posible. ¡Gracias por tu interés en formar parte de PPM INDUSTRIES DE MÉXICO! 👷‍♂",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2112,
+        208
+      ],
+      "id": "2c111243-1929-46a0-bd64-11128bf8bd93",
+      "name": "Edit Fields2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "ephemeralMessageCases",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "promtEphemeralDocument": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "promtEphemeralMessageWhitoutDocument": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "promtNormalDocument": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "promtEphemeralMessageWhitoutDocument",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "promtNormalMessageWithoutDocument": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "promtMessageWhitDocument",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "promtExtendedTextMessage": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ephemeralMessageCases": {
+      "main": [
+        [
+          {
+            "node": "promtExtendedTextMessage",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "promtNormalMessageWithoutDocument",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "promtEphemeralDocument",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "promtNormalDocument",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        []
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file1": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "promtMessageWhitDocument": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Upload file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "efa56f1a-7ce2-403d-8f70-beb1106fc108",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "176e4163ac7fd88b96718b7d60934ed8291b52605b4b152185139bece2fa4821"
+  },
+  "id": "lgyECwnVjEGfemof",
+  "tags": []
+}

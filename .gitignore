@@ -1,11 +1,8 @@
 # Ignorar archivos de entorno con claves sensibles
 /.env.local
 /.env
-# Ignorar carpetas o archivos de datos persistentes (si llegas a usar bind mounts)
-data/
-*.sqlite
-*.db
-
+#Ignorar archivos de configuración de producción
+/test.json
 # Ignorar logs y caches comunes
 *.log
 node_modules/
@@ -18,9 +15,7 @@ yarn-error.log*
 Thumbs.db
 .vscode/
 .idea/
-
 # Ignorar archivos de Docker Compose override o temporales
 docker-compose.override.yml
-
 #ignorar carpeta de scripts
 /scripts/

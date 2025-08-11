@@ -12,7 +12,7 @@ Este proyecto permite crear flujos automatizados de atención, responder pregunt
 - **EvolutionAPI**
 - **n8n**
 - **LLaMA 3**
-- **Ollama**
+- **openrouter.ai**
 - **Docker + Docker Compose**
 
 ---
